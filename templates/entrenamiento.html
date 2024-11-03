@@ -1,0 +1,575 @@
+{% extends "plantilla.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Taekwondo</title>
+  <style>
+    #container {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    #video-container {
+      background-color: #f5f5f5;
+      padding: 20px;
+      border: 1px solid #ccc;
+      margin-right: 20px;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    }
+
+    #analysis-container {
+      display: block; /* Asegura que los cuadros estén uno debajo del otro */
+    }
+
+    .analysis-section {
+      background-color: #f5f5f5;
+      padding: 20px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px; /* Para separar los cuadros */
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    }
+
+    #form-botones {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 20px;
+      background-color: lightgrey;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 100%;
+    }
+
+    .green { background-color: green; }
+    .yellow { background-color: yellow; }
+    .red { background-color: red; }
+
+    h3 {
+      margin-top: 0;
+    }
+    /*parte de los botones añadida */
+    .controls {
+      margin-top: 10px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      background-color: #333;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+     /* Estilos del modal */
+     #modal {
+      display: none; /* Oculto por defecto */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8); /* Fondo semitransparente */
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #modalContent {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 80%;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #modal video {
+      width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+    }
+
+    .modal-buttons button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .confirm {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+    }
+
+    .cancel {
+      background-color: #f44336;
+      color: white;
+      border: none;
+    }
+     /* Estilos para el textarea de retroalimentación en la página principal */
+     #feedback {
+      width: 100%;
+      height: 100px;
+      margin-top: 15px;
+      resize: vertical;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+     /* Estilos para el modal */
+     .modal2 {
+      display: none; /* Oculto por defecto */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+  }
+  
+  .modal-content2 {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      width: 300px;
+      text-align: center;
+  }
+  
+  .close2 {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+  }
+    
+  </style>
+</head>
+<body>
+
+  <div id="container">
+    <div id="video-container" style="margin: 10px; display: block;">
+      <p>Subir Video: <input type="file" id="videoInput" accept="video/*"></p>
+      <video id="video" width="340" height="340" controls></video>
+      <canvas id="canvas" width="640" height="360"></canvas>
+
+      
+
+      <!-- Botones de Brillo y Velocidad debajo del video -->
+      <div id="form-botones">
+        <label for="brightnessRange">Brillo:</label>
+        <input type="range" id="brightnessRange" min="-100" max="100" value="0">
+      
+        <label for="speedRange">Velocidad:</label>
+        <input type="range" id="speedRange" min="0.25" max="4" value="1" step="0.25">
+      </div>
+
+      <!-- Botones de Play y Pausa -->
+      <div class="controls">
+        <button id="playBtn">Play</button>
+        <button id="pauseBtn">Pausa</button><button id="forwardBtn">Adelantar </button>
+        <button id="backwardBtn">Retroceder </button>
+                <!-- Combobox para seleccionar un estudiante -->
+
+           <!-- Combobox para seleccionar un estudiante -->
+      <label for="estudianteSelect">Selecciona un Estudiante para Entrenamiento:</label>
+      <select id="estudianteSelect" name="estudianteSelect">
+          <option value="">Seleccione un estudiante</option>
+          {% for estudiante in estudiantes %}
+              <option>{{ estudiante.nombre }} {{ estudiante.apellidos }}</option>
+          {% endfor %}
+      </select>
+
+      </div>
+
+
+            <!-- Área para retroalimentación -->
+      <label for="feedback">Retroalimentación:</label>
+      <textarea id="feedback" name="feedback" placeholder="Escribe aquí tus observaciones..."></textarea>
+      <!-- Botón para enviar el análisis -->
+      <button onclick="abrirModal2()">Enviar Análisis</button>
+    </div>
+
+    <!-- Parte de Ángulos y Análisis - Dividido en dos cuadros uno debajo del otro -->
+    <div id="analysis-container">
+      <div class="analysis-section">
+        <h3>Pierna de Apoyo</h3>
+        <div>Pierna de Apoyo - Rodilla: <span id="supportKneeLabel">0</span>°</div>
+        <div class="progress-bar-container">
+          <div id="supportKneeBar" class="progress-bar"></div>
+        </div>
+
+        <div>Pierna de Apoyo - Tobillo: <span id="supportAnkleLabel">0</span>°</div>
+        <div class="progress-bar-container">
+          <div id="supportAnkleBar" class="progress-bar"></div>
+        </div>
+
+        <div>Pierna de Apoyo - Pie: <span id="supportFootLabel">0</span>°</div>
+        <div class="progress-bar-container">
+          <div id="supportFootBar" class="progress-bar"></div>
+        </div>
+      </div>
+
+      <div class="analysis-section">
+        <h3>Pierna de Ejecución</h3>
+        <div>Pierna de Ejecución - Rodilla: <span id="executionKneeLabel">0</span>°</div>
+        <div class="progress-bar-container">
+          <div id="executionKneeBar" class="progress-bar"></div>
+        </div>
+
+        <div>Pierna de Ejecución - Tobillo: <span id="executionAnkleLabel">0</span>°</div>
+        <div class="progress-bar-container">
+          <div id="executionAnkleBar" class="progress-bar"></div>
+        </div>
+
+        <div>Pierna de Ejecución - Pie: <span id="executionFootLabel">0</span>°</div>
+        <div class="progress-bar-container">
+          <div id="executionFootBar" class="progress-bar"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+   <!-- Modal para la previsualización -->
+   <div id="modal">
+    <div id="modalContent">
+      <video id="previewVideo" controls></video>
+      <div class="modal-buttons">
+        <button id="confirmBtn" class="confirm">Cargar a la página</button>
+        <button id="cancelBtn" class="cancel">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+ 
+<!-- Modal para solicitar el correo -->
+<div id="correoModal" class="modal2">
+    <div class="modal-content2">
+        <span class="close2" onclick="cerrarModal()">&times;</span>
+        <h3>Ingrese su Correo</h3>
+        <input type="email" id="correo" placeholder="Ingrese su correo">
+        <button onclick="enviarAnalisis()">Confirmar</button>
+    </div>
+</div>
+     
+
+
+
+
+  <!-- Cargar la librería de MediaPipe -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
+
+  <script>
+    const video = document.getElementById('video');
+    //parte añadida 
+    const videoInput = document.getElementById('videoInput');
+    const previewVideo = document.getElementById('previewVideo');
+    const modal = document.getElementById('modal');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    //parte de los botones 
+    const playBtn = document.getElementById('playBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    
+    const supportKneeLabel = document.getElementById('supportKneeLabel');
+    const supportAnkleLabel = document.getElementById('supportAnkleLabel');
+    const supportFootLabel = document.getElementById('supportFootLabel');
+
+    const executionKneeLabel = document.getElementById('executionKneeLabel');
+    const executionAnkleLabel = document.getElementById('executionAnkleLabel');
+    const executionFootLabel = document.getElementById('executionFootLabel');
+    
+    const supportKneeBar = document.getElementById('supportKneeBar');
+    const supportAnkleBar = document.getElementById('supportAnkleBar');
+    const supportFootBar = document.getElementById('supportFootBar');
+    
+    const executionKneeBar = document.getElementById('executionKneeBar');
+    const executionAnkleBar = document.getElementById('executionAnkleBar');
+    const executionFootBar = document.getElementById('executionFootBar');
+
+    let brightness = 0;
+    let playbackSpeed = 1;
+
+    // Ajustar el brillo
+    document.getElementById('brightnessRange').addEventListener('input', function() {
+      brightness = parseInt(this.value);
+      canvas.style.filter = `brightness(${brightness + 100}%)`;
+    });
+
+    // Ajustar la velocidad de reproducción
+    document.getElementById('speedRange').addEventListener('input', function() {
+      playbackSpeed = parseFloat(this.value);
+      video.playbackRate = playbackSpeed;
+    });
+
+     // Botones de Play y Pausa
+     playBtn.addEventListener('click', () => {
+      video.play();
+    });
+
+    pauseBtn.addEventListener('click', () => {
+      video.pause();
+    });
+
+     // Botón para adelantar el video 10 segundos
+     forwardBtn.addEventListener('click', () => {
+      video.currentTime += 1;
+      updateCanvasWithVideoTime();
+    });
+
+    // Botón para retroceder el video 10 segundos
+    backwardBtn.addEventListener('click', () => {
+      video.currentTime -= 1;
+      updateCanvasWithVideoTime();
+    });
+
+    // Cargar el video
+    document.getElementById('videoInput').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        video.src = url;
+      }
+    });
+
+    // Inicializar MediaPipe Pose
+    const pose = new Pose({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`,
+    });
+
+    pose.setOptions({
+      modelComplexity: 1,
+      smoothLandmarks: true,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5,
+    });
+
+    pose.onResults(onPoseResults);
+
+    // Procesar el video
+    video.addEventListener('play', () => {
+      const analyzeVideo = async () => {
+        if (!video.paused && !video.ended) {
+          await pose.send({image: video});
+          requestAnimationFrame(analyzeVideo);
+        }
+      };
+      analyzeVideo();
+    }); 
+    
+    // Función para sincronizar el canvas con el tiempo actual del video
+    function updateCanvasWithVideoTime() {
+      pose.send({image: video}); // Envía el fotograma actual del video a MediaPipe para análisis.
+    }
+
+    // Dibujar los resultados y ejecutar el análisis
+    function onPoseResults(results) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      if (results.poseLandmarks) {
+        drawLandmarks(results.poseLandmarks);
+        analyzeLegs(results.poseLandmarks);
+      }
+    }
+
+    // Dibujar los puntos de las articulaciones
+    function drawLandmarks(landmarks) {
+      const leftLeg = [landmarks[23], landmarks[25], landmarks[27], landmarks[31]];
+      const rightLeg = [landmarks[24], landmarks[26], landmarks[28], landmarks[32]];
+
+      drawSegment(leftLeg);
+      drawSegment(rightLeg);
+
+      landmarks.forEach((landmark) => {
+        ctx.beginPath();
+        ctx.arc(landmark.x * canvas.width, landmark.y * canvas.height, 5, 0, 2 * Math.PI);
+        ctx.fillStyle = 'red';
+        ctx.fill();
+      });
+    }
+
+    function drawSegment(points) {
+      ctx.beginPath();
+      ctx.moveTo(points[0].x * canvas.width, points[0].y * canvas.height);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x * canvas.width, points[i].y * canvas.height);
+      }
+      ctx.stroke();
+    }
+
+    // Análisis completo de las piernas: rodilla, tobillo y pie
+    function analyzeLegs(landmarks) {
+      // Pierna de apoyo (izquierda)
+      const supportKneeAngle = calculateAngle(landmarks[23], landmarks[25], landmarks[27]);
+      const supportAnkleAngle = calculateAngle(landmarks[25], landmarks[27], landmarks[31]);
+      const supportFootAngle = calculateAngle(landmarks[27], landmarks[31], landmarks[29]);
+
+      // Pierna de ejecución (derecha)
+      const executionKneeAngle = calculateAngle(landmarks[24], landmarks[26], landmarks[28]);
+      const executionAnkleAngle = calculateAngle(landmarks[26], landmarks[28], landmarks[32]);
+      const executionFootAngle = calculateAngle(landmarks[28], landmarks[32], landmarks[30]);
+
+      // Mostrar ángulos
+      supportKneeLabel.textContent = supportKneeAngle.toFixed(2);
+      supportAnkleLabel.textContent = supportAnkleAngle.toFixed(2);
+      supportFootLabel.textContent = supportFootAngle.toFixed(2);
+
+      executionKneeLabel.textContent = executionKneeAngle.toFixed(2);
+      executionAnkleLabel.textContent = executionAnkleAngle.toFixed(2);
+      executionFootLabel.textContent = executionFootAngle.toFixed(2);
+
+      // Actualizar barras de progreso
+      updateBar(supportKneeBar, supportKneeAngle, 70, 110);
+      updateBar(supportAnkleBar, supportAnkleAngle, 50, 80);
+      updateBar(supportFootBar, supportFootAngle, 60, 180);
+
+      updateBar(executionKneeBar, executionKneeAngle, 70, 110);
+      updateBar(executionAnkleBar, executionAnkleAngle, 70, 110);
+      updateBar(executionFootBar, executionFootAngle, 10, 40);
+    }
+
+    // Calcular ángulo entre tres puntos
+    function calculateAngle(p1, p2, p3) {
+      const radians = Math.atan2(p3.y - p2.y, p3.x - p2.x) - Math.atan2(p1.y - p2.y, p1.x - p2.x);
+      let angle = (radians * 90) / Math.PI;
+      if (angle < 0) angle += 180;
+      return angle;
+    }
+
+    // Actualizar barra y cambiar color
+    function updateBar(bar, angle, lowerBound, upperBound) {
+      if (angle < lowerBound) {
+        bar.className = 'progress-bar red';
+      } else if (angle >= lowerBound && angle <= upperBound) {
+        bar.className = 'progress-bar green';
+      } else {
+        bar.className = 'progress-bar yellow';
+      }
+    }
+
+    //parte de restriccion 
+    videoInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      const fileName = file.name.toLowerCase();
+
+      // Verificar si el nombre del archivo contiene "taekwondo"
+      if (!fileName.includes('taekwondo')) {
+        // Mostrar el modal para previsualización
+        const url = URL.createObjectURL(file);
+        previewVideo.src = url;
+        modal.style.display = 'flex'; // Mostrar el modal en el centro de la pantalla
+
+        // Configurar el botón de confirmar para cargar el video en la página
+        confirmBtn.onclick = () => {
+          finalVideo.src = url; // Cargar el video en el elemento principal solo si el usuario confirma
+          modal.style.display = 'none'; // Ocultar el modal
+          previewVideo.src = ''; // Limpiar el video de previsualización en el modal
+        };
+
+        // Configurar el botón de cancelar para limpiar la previsualización y recargar la página
+        cancelBtn.onclick = () => {
+          videoInput.value = ''; // Limpiar el input para que no cargue nada
+          modal.style.display = 'none'; // Ocultar el modal
+          previewVideo.src = ''; // Limpiar el video de previsualización en el modal
+          location.reload(); // Recargar la página
+        };
+      } else {
+        // Si el nombre contiene "taekwondo", cargar el video directamente en el elemento principal
+        const url = URL.createObjectURL(file);
+        finalVideo.src = url;
+      }
+    });
+
+    // Función para enviar el análisis al servidor
+    
+    // Función para enviar el análisis al servidor
+    function enviarAnalisis() {
+      // Obtener el nombre del estudiante, retroalimentación, y correo
+      const estudianteSelect = document.getElementById('estudianteSelect');
+      const feedback = document.getElementById('feedback').value;
+      const correo = document.getElementById('correo').value;
+
+      // Validación: verificar que se seleccionó un estudiante y se ingresó retroalimentación y correo
+      if (!estudianteSelect.value) {
+          alert("Por favor, selecciona un estudiante.");
+          return;
+      }
+      if (!feedback) {
+          alert("Por favor, escribe la retroalimentación.");
+          return;
+      }
+      if (!correo) {
+          alert("Por favor, ingresa un correo electrónico.");
+          return;
+      }
+
+      // Convertir el contenido del canvas a una imagen en base64
+      const canvas = document.getElementById('canvas');
+      const canvasData = canvas.toDataURL('image/png');  // Captura el canvas como imagen
+
+      // Enviar los datos al servidor usando fetch
+      fetch('/enviar_analisis', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              nombre: estudianteSelect.options[estudianteSelect.selectedIndex].text,
+              feedback: feedback,
+              canvasData: canvasData,
+              correo: correo
+          })
+      })
+      .then(response => response.json())
+      .then(data => {
+          alert(data.message);  // Muestra el mensaje de respuesta del servidor
+          cerrarModal();  // Cerrar el modal después de enviar
+      })
+      .catch(error => {
+          console.error('Error al enviar análisis:', error);
+      });
+  }
+
+    // Función para abrir el modal
+    function abrirModal2() {
+      document.getElementById('correoModal').style.display = 'flex';
+  }
+   // Función para cerrar el modal
+   function cerrarModal() {
+    document.getElementById('correoModal').style.display = 'none';
+}
+    
+  </script>
+</body>
+</html>
+
+{% endblock %}

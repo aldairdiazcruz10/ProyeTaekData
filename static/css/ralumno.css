@@ -1,0 +1,119 @@
+/* Fondo y contenedor principal */
+body {
+    background-color: #fbfbfb;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 50px;
+    gap: 50px; /* Añadir espacio entre el formulario y la lista */
+    flex-grow: 1; /* Hacer que ocupe todo el espacio disponible */
+}
+
+/* Estilo del formulario */
+.form-container {
+    flex: 1;
+    background-color: rgb(242, 240, 240);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    color: #8B0000;
+    margin-right: 20px; /* Añadir margen derecho */
+}
+
+.form-container h2 {
+    text-align: center;
+    color: black;
+}
+
+.form-container label {
+    display: block;
+    margin-top: 15px;
+    color: black;
+}
+
+.form-container input,
+.form-container select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #FF0000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #cc0000;
+}
+
+/* Estilo de la lista de deportistas */
+.list-container {
+    flex: 1;
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    color: black;
+    margin-left: 20px; /* Añadir margen izquierdo */
+}
+
+.list-container h2 {
+    text-align: center;
+    color: #1b1919;
+}
+
+.list-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.list-container th,
+.list-container td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.list-container th {
+    background-color: #FF4500;
+    color: white;
+}
+
+.list-container tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Footer con fecha y hora */
+.footer {
+    background-color: #D42A2A;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    
+}
+
+#fecha,
+#hora {
+    color: white;
+    margin: 0;
+}
+

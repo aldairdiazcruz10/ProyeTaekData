@@ -1,0 +1,98 @@
+{% extends "plantilla.html" %}
+{% block content %}
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ralumno.css') }}">
+    <title>Registro de Deportista</title>
+</head>
+<body>
+    <div class="main-content">
+        <div class="container">
+            <div class="form-container">
+                <h2>Registro del Deportista</h2>
+                <form action="/registro_alumno" method="POST">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                    
+                    <label for="apellidos">Apellidos:</label>
+                    <input type="text" id="apellidos" name="apellidos" required>
+
+                    <label for="graduacion">Graduación:</label>
+                    <select id="graduacion" name="graduacion" required>
+                        <option value="blanco">Blanco</option>
+                        <option value="amarillo">Amarillo</option>
+                        <option value="verde">Verde</option>
+                        <option value="azul">Azul</option>
+                        <option value="rojo">Rojo</option>
+                        <option value="negro">Negro</option>
+                    </select>
+
+                    <label for="tipo_chagui">Tipo de Chagui:</label>
+                    <select id="tipo_chagui" name="tipo_chagui" required>
+                        <option value="ap chagui">Ap Chagui</option>
+                        <option value="yop chagui">Yop Chagui</option>
+                        <option value="dollyo chagui">Dollyo Chagui</option>
+                    </select>
+
+                    <button type="submit">Iniciar</button>
+                </form>
+            </div>
+
+            <div class="list-container">
+                <h2>Lista de Deportistas Registrados</h2>
+                <table id="tabla-alumnos" border="1">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Graduación</th>
+                        <th>Tipo de Chagui</th>
+                    </tr>
+                    {% for alumno in alumnos %}
+                    <tr>
+                        <td>{{ alumno.nombre }}</td>
+                        <td>{{ alumno.apellidos }}</td>
+                        <td>{{ alumno.graduacion }}</td>
+                        <td>{{ alumno.tipo_chagui }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">No hay alumnos registrados.</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p id="fecha">Fecha: </p>
+        <p id="hora">Hora: </p>
+    </div>
+
+    <script>
+        // Actualizar la fecha y hora
+        function actualizarFechaHora() {
+            const ahora = new Date();
+            const fecha = ahora.toLocaleDateString();
+            const hora = ahora.toLocaleTimeString();
+            document.getElementById('fecha').textContent = "Fecha: " + fecha;
+            document.getElementById('hora').textContent = "Hora: " + hora;
+        }
+
+        window.onload = function() {
+            actualizarFechaHora();
+            setInterval(actualizarFechaHora, 1000);
+        };
+    </script>
+</body>
+</html>
+
+
+
+
+{% endblock %}

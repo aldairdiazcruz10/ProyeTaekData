@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Taekwondo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/principal.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li class="dropdown">
+                    <a href="#">Inicio</a>
+                    <ul class="dropdown-content">
+                        <li><a href="{{ url_for('inicio') }}">informacion</a></li>
+                        <li><a href="{{ url_for('logout') }}">Salir</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Entrenamiento</a>
+                    <ul class="dropdown-content">
+                        <li><a href="{{ url_for('alumno') }}">Registro de Alumno</a></li>
+                        <li><a href="{{ url_for('entrenamiento') }}">Analisis de Tecnica</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Reportes</a></li>
+                <li><a href="#">Mantenimiento</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/imagen1.jpg') }}" alt="Taekwondo Logo">
+        </div>
+    </main>
+  
+</body>
+</html>
+

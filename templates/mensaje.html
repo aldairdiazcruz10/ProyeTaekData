@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <title>Bienvenido a TaekData</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .header {
+            background-color: #ff4500;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header a {
+            color: white;
+            text-decoration: none;
+            float: right;
+        }
+        .body {
+            padding: 20px;
+        }
+        .body h2 {
+            color: #333;
+        }
+        .body p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #666;
+        }
+        .body .cta {
+            display: inline-block;
+            background-color: #ff4500;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #666;
+            font-size: 14px;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="email-container">
+        <!-- Encabezado -->
+        <div class="header">
+            <h1>Bienvenido a TaekData</h1>
+          
+        </div>
+
+        <!-- Cuerpo del correo -->
+        <div class="body">
+            <h2>Hola, {{username}}</h2>
+            <p>
+                Gracias por registrarte en <strong>TaekData</strong>, la plataforma especializada en el análisis técnico de Taekwondo ITF 
+                estamos emocionados de que te unas a nuestra comunidad y esperamos que disfrutes de todas las funcionalidades que hemos desarrollado
+                para optimizar tu entrenamiento o mejorar tus resultados.
+            </p>
+            <p>
+                Tus credenciales son las siguientes:
+            </p>
+            <ul>
+                <li><strong>Usuario:</strong> {{username}}</li>
+                <li><strong>Contraseña:</strong> {{password}}</li>
+            </ul>
+            <p>
+                Para comenzar a usar la plataforma, visita el siguiente enlace y sigue las instrucciones:
+            </p>
+            <a class="cta" href="">Acceder a TaekData</a>
+        </div>
+
+        <!-- Pie de página -->
+        <div class="footer">
+            <p>Atentamente,<br>El equipo de TaekData</p>
+        </div>
+    </div>
+
+</body>
+</html>

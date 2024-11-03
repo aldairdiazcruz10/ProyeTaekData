@@ -1,0 +1,125 @@
+/* Estilos generales */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor del formulario */
+.container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* Contenedor de imagen y formulario */
+.image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Imagen de fondo */
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1; /* Envía la imagen al fondo */
+}
+
+/* Contenedor del formulario */
+.form-container {
+    background:rgba(255, 255, 255, 0.9); /* Fondo blanco semi-transparente */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Contenedor del asistente virtual */
+.assistant {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Imagen del asistente virtual */
+.assistant-image {
+    width: 120px;
+    height: auto;
+    margin-right: 15px;
+}
+
+/* Mensaje del asistente virtual */
+.assistant-message {
+    max-width: 300px;
+    text-align: left;
+}
+
+/* Título del asistente */
+h2 {
+    margin: 0;
+    color: #333;
+}
+
+/* Mensaje de bienvenida */
+p {
+    margin: 5px 0 15px;
+    color: #555;
+}
+
+/* Estilos de los grupos de entrada */
+.input-group {
+    margin-bottom: 15px;
+    width: 100%;
+    text-align: left;
+}
+
+/* Etiquetas */
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+/* Campos de entrada */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Botón de inicio de sesión */
+button {
+    background-color: #009688;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #00796b;
+}

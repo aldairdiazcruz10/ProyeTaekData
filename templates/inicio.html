@@ -1,0 +1,26 @@
+{% extends "plantilla.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
+<section id="proposito">
+    <center><h2>Propósito del Proyecto</h2></center>
+    <p class="justify-text">
+        El proyecto tiene como objetivo desarrollar un sistema inteligente que utilice visión computacional para prevenir lesiones en las extremidades inferiores de los practicantes de Taekwondo-ITF. El sistema corregirá la postura en la técnica Chagui durante el entrenamiento, analizando videos en lugar de imágenes estáticas. Este sistema será implementado en la Academia Yomchi de Chiclayo, brindando una herramienta avanzada para mejorar la seguridad y efectividad del entrenamiento.
+    </p>
+    <p class="justify-text">
+        Además, el sistema proporcionará retroalimentación a los practicantes, permitiendo ajustes inmediatos en su técnica para evitar movimientos incorrectos que podrían resultar en lesiones. La retroalimentación se basará en algoritmos avanzados de visión por computadora y aprendizaje automático que identificarán patrones de movimiento que aumentan el riesgo de lesiones.
+    </p>
+    <p class="justify-text">
+        La implementación del sistema incluye el uso de cámaras y precisión para capturar los movimientos de los practicantes desde múltiples ángulos. Los datos de video serán procesados para detectar errores en la ejecución de la técnica Chagui, y el sistema sugerirá correcciones específicas y personalizadas.
+    </p>
+    <p class="justify-text">
+        Este proyecto también contempla la creación de un banco de datos con registros históricos de entrenamiento y correcciones, lo cual permitirá realizar un seguimiento del progreso de cada practicante a lo largo del tiempo. Además, el sistema podrá generar informes detallados que los instructores podrán utilizar para personalizar aún más los programas de entrenamiento.
+    </p>
+    <p class="justify-text">
+        En última instancia, el objetivo es no solo prevenir lesiones, sino también mejorar el rendimiento general de los atletas, permitiendo que alcancen un nivel más alto de competencia con un menor riesgo de interrupciones debido a lesiones. Este sistema innovador representa un avance significativo en la integración de tecnología avanzada en el entrenamiento deportivo, proporcionando una ventaja competitiva a los practicantes de Taekwondo-ITF.
+    </p>
+</section>
+<footer>
+    <p>&copy; 2024 Sistema Inteligente para Prevención de Lesiones en Taekwondo-ITF</p>
+</footer>
+{% endblock %}
+

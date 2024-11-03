@@ -1,0 +1,126 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(to right, #e66465, #9198e5); /* Fondo degradado */
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    border-radius: 10px; /* Bordes redondeados */
+    overflow: hidden; /* Oculta desbordes */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Sombra alrededor del contenedor */
+    background: white; /* Fondo blanco del formulario */
+}
+
+.image-section {
+    flex: 8; /* 80% del ancho */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.image-section img {
+    width: 300px; /* Ajusta el ancho a 300 píxeles */
+    height: auto; /* Mantiene la relación de aspecto */
+    border-radius: 10px; /* Bordes redondeados *//
+}
+
+.form-section {
+    flex: 9; /* 20% del ancho */
+    padding: 30px; /* Espaciado interno */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #f9f9f9; /* Color de fondo del formulario */
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #333; /* Color del título */
+    text-align: center; /* Centrar texto */
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+    width: 90%;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s, box-shadow 0.3s; /* Transición suave */
+    font-size: 16px; /* Tamaño de fuente */
+}
+
+.form-group input:focus {
+    border-color: #007bff; /* Cambia el color del borde al enfocar */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra al enfocar */
+    outline: none; /* Eliminar el contorno por defecto */
+}
+
+.form-group label {
+    position: absolute;
+    left: 15px;
+    top: 12px;
+    color: #666;
+    transition: 0.2s ease all;
+    font-size: 16px; /* Tamaño de fuente */
+    pointer-events: none; /* Evitar eventos en la etiqueta */
+}
+
+.form-group input:focus + label,
+.form-group input:valid + label {
+    top: -10px;
+    left: 10px;
+    font-size: 12px;
+    color: #007bff; /* Cambia el color de la etiqueta al enfocar */
+}
+
+input[type="submit"] {
+    padding: 12px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px; /* Tamaño de fuente */
+    transition: background-color 0.3s, transform 0.3s; /* Transición suave */
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3; /* Color al pasar el mouse */
+    transform: scale(1.05); /* Efecto de escalado al pasar el mouse */
+}
+
+.back-link {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.back-link a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s; /* Transición al cambiar color */
+}
+
+.back-link a:hover {
+    color: #0056b3; /* Cambia el color al pasar el mouse */
+    text-decoration: underline; /* Subraya el enlace al pasar el mouse */
+}
+
+/* Estilos para iconos en los campos del formulario */
+.input-icon {
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    color: #aaa;
+}
