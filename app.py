@@ -1,9 +1,14 @@
 from flask import Flask, render_template, request, redirect,url_for, flash,jsonify
 import mysql.connector
 import base64
-
+import tensorflow as tf
+from PIL import Image
+import numpy as np
+from datetime import datetime
 #para poder trabajar con mail
 from flask_mail import Mail , Message
+from flask_sqlalchemy import SQLAlchemy
+
 #Parte adicional para insertar a un nuevo usuario
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -17,7 +22,8 @@ def connect_to_db():
         password='',
         database='proyecto_tesis'
     )
-    
+
+
 #Configuracion de Correo enviar usuaruio y contraseña
 # Configuración de Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com' #es si quieres utilizar gmail, outool  o hotmail
@@ -105,10 +111,23 @@ def register():
 
 #-----------------#
 
+model = tf.keras.models.load_model('taekwondo_postures_model.keras')
+#parte añadida 
 
 
-        
+@app.route('/analizar_pose', methods=['POST'])
+def analizar_pose():
+    image_file = request.files['image']
+    image = Image.open(image_file).resize((224, 224))
+    image = np.array(image) / 255.0
+    image = np.expand_dims(image, axis=0)  # Añadir dimensión extra para lote
+    
+    prediction = model.predict(image)
+    predicted_class = np.argmax(prediction)
+    #parte añadida
+    return jsonify({'pose': str(predicted_class)})
 
+#base para conseguir los estudiantes 
 def check_user(username, password):
     connection = connect_to_db()
     cursor = connection.cursor(dictionary=True)
@@ -122,10 +141,6 @@ def check_user(username, password):
         return True
     else:
         return False
-
-
-
-
 #---------
     
 #formulario si es que sale error
@@ -222,39 +237,82 @@ def register_alumno():
 
 
 
+
+
+#parte de enviar correo y de pagina de reportes 
 @app.route('/enviar_analisis', methods=['POST'])
 def enviar_analisis():
     data = request.json
-    nombre = data['nombre']
-    feedback = data['feedback']
-    canvas_data = data['canvasData']
-    correo = data['correo']
+    if not data:
+        return jsonify({"error": "No se recibieron datos"}), 400
+
+    nombre = data.get('nombre')
+    feedback = data.get('feedback')
+    correo = data.get('correo')
+    canvas_data = data.get('canvasData')
+
+    # Validar datos
+    if not all([nombre, feedback, correo, canvas_data]):
+        return jsonify({"error": "Todos los campos son obligatorios"}), 400
 
     # Convertir el dato del canvas de base64 a imagen
     canvas_data = canvas_data.replace('data:image/png;base64,', '')
-    canvas_image = base64.b64decode(canvas_data)
+    try:
+        canvas_image = base64.b64decode(canvas_data)
+    except Exception as e:
+        return jsonify({"error": "Error al decodificar la imagen"}), 400
 
     # Guardar temporalmente la imagen del canvas
     canvas_filename = 'analisis.png'
     with open(canvas_filename, 'wb') as f:
         f.write(canvas_image)
 
-    # Preparar el mensaje
+    # Conectar a la base de datos y guardar los datos
+    connection = connect_to_db()
+    cursor = connection.cursor()
+    try:
+        query = """
+            INSERT INTO reportes (nombre, feedback, correo, canvas_data, fecha)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        values = (nombre, feedback, correo, canvas_data, fecha)
+        cursor.execute(query, values)
+        connection.commit()
+    except mysql.connector.Error as err:
+        return jsonify({"error": f"Error al guardar en la base de datos: {err}"}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+    # Preparar y enviar el correo
     msg = Message(subject="Análisis de Entrenamiento",
                   sender="aldairdiazcruz9@gmail.com",
-                  recipients=[correo])  # Usa el correo ingresado por el usuario
-
-    # Cuerpo del correo
+                  recipients=[correo])
     msg.body = f"Hola {nombre},\n\nAquí tienes el análisis de tu entrenamiento.\n\nRetroalimentación: {feedback}"
-    
-    # Adjuntar la imagen
     with app.open_resource(canvas_filename) as fp:
         msg.attach("analisis.png", "image/png", fp.read())
 
-    # Enviar el mensaje
     mail.send(msg)
 
-    return jsonify({"message": "El análisis ha sido enviado correctamente."})
+    return jsonify({"message": "El análisis ha sido enviado correctamente y se ha guardado en la base de datos."})
+
+
+
+#parte de la pagina de reportes
+@app.route('/reportes')
+def mostrar_reportes():
+    connection = connect_to_db()
+    cursor = connection.cursor(dictionary=True)  # Usar `dictionary=True` para devolver los resultados como diccionarios
+    cursor.execute("SELECT * FROM reportes")
+    reportes = cursor.fetchall()
+    # Consulta para obtener nombres únicos de estudiantes
+    cursor.execute("SELECT DISTINCT nombre FROM reportes")
+    nombres_unicos = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    return render_template('reportes.html', reportes=reportes, nombres_unicos=nombres_unicos)
 
 
 

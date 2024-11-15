@@ -1,0 +1,93 @@
+{% extends "plantilla.html" %}
+{% block content %}
+    <h1>Reportes de Análisis</h1>
+
+    <!-- Filtro por estudiante -->
+    <label for="filtroEstudiante">Filtrar por Estudiante:</label>
+    <select id="filtroEstudiante" onchange="filtrarReportes()">
+        <option value="">Todos los Estudiantes</option>
+        {% for nombre in nombres_unicos %}
+            <option value="{{ nombre.nombre }}">{{ nombre.nombre }}</option>
+        {% endfor %}
+    </select>
+
+    <div id="reportesContainer">
+        {% if reportes %}
+            {% for reporte in reportes %}
+                <div class="reporte-card" data-nombre="{{ reporte.nombre }}">
+                    <h3>Nombre: {{ reporte.nombre }}</h3>
+                    <p><strong>Fecha de Análisis:</strong> {{ reporte.fecha }}</p>
+                    <p><strong>Retroalimentación:</strong> {{ reporte.feedback }}</p>
+                    <p><strong>Correo:</strong> {{ reporte.correo }}</p>
+                    <img src="data:image/png;base64,{{ reporte.canvas_data }}" alt="Imagen de análisis">
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay reportes disponibles.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function filtrarReportes() {
+            const filtro = document.getElementById('filtroEstudiante').value.toLowerCase();
+            const reportes = document.querySelectorAll('.reporte-card');
+
+            reportes.forEach(reporte => {
+                const nombre = reporte.getAttribute('data-nombre').toLowerCase();
+                if (filtro === "" || nombre === filtro) {
+                    reporte.style.display = "block";
+                } else {
+                    reporte.style.display = "none";
+                }
+            });
+        }
+    </script>
+
+    <style>
+        /* Estilos básicos y mejorados para los reportes */
+        #reportesContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 1400px;
+            width: 100%;
+        }
+        .reporte-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            width: calc(50% - 20px); /* Dos tarjetas por fila */
+            box-sizing: border-box;
+        }
+        .reporte-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        #filtroEstudiante {
+            padding: 8px 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: border 0.2s;
+        }
+        #filtroEstudiante:focus {
+            border-color: #007bff;
+        }
+    </style>
+{% endblock %}
+
+
+

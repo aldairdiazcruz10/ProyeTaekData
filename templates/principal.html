@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Taekwondo</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/principal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/asistente.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -25,8 +26,12 @@
                         <li><a href="{{ url_for('entrenamiento') }}">Analisis de Tecnica</a></li>
                     </ul>
                 </li>
-                <li><a href="#">Reportes</a></li>
-                <li><a href="#">Mantenimiento</a></li>
+                <li class="dropdown">
+                    <a href="#">Reportes</a>
+                    <ul class="dropdown-content">
+                        <li><a href="{{ url_for('mostrar_reportes') }}">Reportes de Alumnos</a></li>
+                    </ul>
+                </li>
             </ul>
         </nav>
     </header>
@@ -35,6 +40,24 @@
             <img src="{{ url_for('static', filename='images/imagen1.jpg') }}" alt="Taekwondo Logo">
         </div>
     </main>
+    <div id="assistant-container">
+        <div id="assistant-icon" onclick="toggleAssistant()">
+            <img src="{{ url_for('static', filename='images/taekwondo_background.jpg') }}" alt="Asistente" />
+        </div>
+        <div id="assistant-dialog" class="hidden">
+            <div id="assistant-header">
+                <span>Asistente Virtual</span>
+                <button onclick="toggleAssistant()">X</button>
+            </div>
+            <div id="assistant-content">
+                <p id="assistant-greeting">¡Hola! ¿En qué puedo ayudarte?</p>
+                <div id="chat-messages"></div>
+                <input type="text" id="user-input" placeholder="Escribe tu pregunta..." onkeypress="handleInput(event)" />
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/asistente.js') }}"></script>
   
 </body>
 </html>
